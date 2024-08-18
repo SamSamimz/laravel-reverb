@@ -10,7 +10,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard',[ChatController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/chat/{username}',ChatComponent::class)->middleware(['auth', 'verified'])->name('chat.index');
+Route::get('/chat/{username?}',ChatComponent::class)->middleware(['auth', 'verified'])->name('chat.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

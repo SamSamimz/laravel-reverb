@@ -8,17 +8,20 @@ use Illuminate\Support\Facades\Auth;
 
 class ChatComponent extends Component
 {
-    public function mount($username) {
+    public $selectedUser = null;
 
-       $user = User::where('username',$username)->where('id', '!=', Auth::id())->first();
-       if(!$user) {
-        abort(404);
-       }
+    public function mount($username = null) {
+        if($username) {
+            $user = User::where('username',$username)->where('id', '!=', Auth::id())->first();
+            if(!$user) {
+             abort(404);
+            }
+        }
     }
 
     public function render()
     {
         $users = User::where('id', '!=' ,Auth::id())->get();
-        return view('livewire.chat-component');
+        return view('livewire.chat-component',compact('users'));
     }
 }
