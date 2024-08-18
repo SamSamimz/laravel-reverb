@@ -2,7 +2,7 @@
     <div class="row clearfix">
         <div class="col-lg-12">
             <div class="card chat-app">
-                <div id="plist" class="people-list" style="max-height: 840px; overflow-y: auto">
+                <div id="plist" class="people-list" style="max-height: 780px; overflow-y: auto">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-search"></i></span>
@@ -11,11 +11,11 @@
                     </div>
                     <ul class="list-unstyled chat-list mt-2 mb-0">
                         @foreach ($users as $user)
-                        <li class="clearfix">
+                        <li class="clearfix" wire:click='changeSelectedUser({{$user}})'>
                             <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
                             <div class="about">
-                                <div class="name">Vincent Porter</div>
-                                <div class="status"> <i class="fa fa-circle offline"></i> left 7 mins ago </div>
+                                <div class="name">{{ $user->username }}</div>
+                                <div class="status"> <i class="fa fa-circle offline"></i> {{ $user->last_active_at }} </div>
                             </div>
                         </li>
                         @endforeach
@@ -24,15 +24,17 @@
                 <div class="chat">
                     <div class="chat-header clearfix">
                         <div class="row">
+                            @if ($selectedUser)
                             <div class="col-lg-6">
                                 <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
                                     <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
                                 </a>
                                 <div class="chat-about">
-                                    <h6 class="m-b-0">Aiden Chavez</h6>
-                                    <small>Last seen: 2 hours ago</small>
+                                    <h6 class="m-b-0">{{ @$selectedUser->name }}</h6>
+                                    <small>{{ @$selectedUser->activeStatus() }}</small>
                                 </div>
                             </div>
+                            @endif
                             <div class="col-lg-6 hidden-sm text-right">
                                 <a href="javascript:void(0);" class="btn btn-outline-secondary"><i
                                         class="fa fa-camera"></i></a>
@@ -45,57 +47,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="chat-history" style="max-height: 700px; overflow-y: auto">
+                    <div class="chat-history" style="height: 650px; overflow-y: auto">
                         <ul class="m-b-0">
-                            <li class="clearfix">
-                                <div class="message-data text-right">
-                                    <span class="message-data-time">10:10 AM, Today</span>
+                            @forelse ($messages as $message)
+                            <li class="clearfix {{ $message->sender->id === auth()->user()->id ? 'text-right' : '' }}">
+                                <div class="message-data">
+                                    <span class="message-data-time">{{ $message->messageTime() }}</span>
                                     <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">
                                 </div>
-                                <div class="message other-message float-right"> Hi Aiden, how are you? How is the
-                                    project coming along? </div>
+                                <div class="message other-message"> {{ $message->text }} </div>
                             </li>
-                            <li class="clearfix">
-                                <div class="message-data">
-                                    <span class="message-data-time">10:12 AM, Today</span>
-                                </div>
-                                <div class="message my-message">Are we meeting today?</div>
-                            </li>
-                            <li class="clearfix">
-                                <div class="message-data">
-                                    <span class="message-data-time">10:15 AM, Today</span>
-                                </div>
-                                <div class="message my-message">Project has been already finished and I have results to
-                                    show you.</div>
-                            </li>
-                            <li class="clearfix">
-                                <div class="message-data">
-                                    <span class="message-data-time">10:15 AM, Today</span>
-                                </div>
-                                <div class="message my-message">Project has been already finished and I have results to
-                                    show you.</div>
-                            </li>
-                            <li class="clearfix">
-                                <div class="message-data">
-                                    <span class="message-data-time">10:15 AM, Today</span>
-                                </div>
-                                <div class="message my-message">Project has been already finished and I have results to
-                                    show you.</div>
-                            </li>
-                            <li class="clearfix">
-                                <div class="message-data">
-                                    <span class="message-data-time">10:15 AM, Today</span>
-                                </div>
-                                <div class="message my-message">Project has been already finished and I have results to
-                                    show you.</div>
-                            </li>
-                            <li class="clearfix">
-                                <div class="message-data">
-                                    <span class="message-data-time">10:15 AM, Today</span>
-                                </div>
-                                <div class="message my-message">Project has been already finished and I have results to
-                                    show you.</div>
-                            </li>
+                            @empty
+                                
+                            @endforelse
                         </ul>
                     </div>
                     <div class="chat-message clearfix">

@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Message extends Model
 {
@@ -13,11 +14,24 @@ class Message extends Model
     protected $guarded = [];
 
     public function sender() :BelongsTo {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'sender_id');
     }
 
     public function receiver() :BelongsTo {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'receiver_id');
+    }
+    
+    public function messageTime()
+    {
+        $time = Carbon::parse($this->created_at);
+
+        if ($time->isToday()) {
+            return $time->format('h:i A') . ', Today';
+        } elseif ($time->isYesterday()) {
+            return $time->format('h:i A') . ', Yesterday';
+        } else {
+            return $time->format('h:i A, M d, Y');
+        }
     }
 
 
