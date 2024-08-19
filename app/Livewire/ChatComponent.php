@@ -2,15 +2,19 @@
 
 namespace App\Livewire;
 
+use App\Events\MessageSendEvent;
 use App\Models\Message;
 use App\Models\User;
 use Carbon\Carbon;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 
 class ChatComponent extends Component
 {
+    use LivewireAlert;
     public $selectedUser = null;
     public $sender_id;
     // #[Url('username')]
@@ -68,7 +72,13 @@ class ChatComponent extends Component
             'text' => $this->message
        ]);
        $this->loadMessages();
+       broadcast(new MessageSendEvent($sendedMessage))->toOthers();
        $this->reset('message');
+    }
+
+    #[On('echo-private:chat-channel.{sender_id},MessageSendEvent')]
+    public function listenForMessages($listen) {
+        $this->alert('success','Message send');
     }
 
 
