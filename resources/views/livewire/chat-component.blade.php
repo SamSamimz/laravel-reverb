@@ -2,7 +2,7 @@
     <div class="row clearfix">
         <div class="col-lg-12">
             <div class="card chat-app">
-                <div id="plist" class="people-list" style="max-height: 780px; overflow-y: auto">
+                <div id="plist" class="people-list" style="max-height: 700px; overflow-y: auto">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-search"></i></span>
@@ -63,12 +63,16 @@
                         </ul>
                     </div>
                     <div class="chat-message clearfix">
-                        <div class="input-group mb-0">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-send"></i></span>
+                        <form wire:submit.prevent="sendMessage">
+                            <div class="input-group mb-0">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="cursor: pointer;" wire:click="sendMessage">
+                                        <i class="fa fa-send"></i>
+                                    </span>
+                                </div>
+                                <input wire:model="message" type="text" class="form-control" placeholder="Enter text here...">
                             </div>
-                            <input type="text" class="form-control" placeholder="Enter text here...">
-                        </div>
+                        </form>        
                     </div>
                 </div>
             </div>

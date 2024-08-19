@@ -23,8 +23,9 @@ class Message extends Model
     
     public function messageTime()
     {
-        $time = Carbon::parse($this->created_at);
-
+        $timezone = 'Asia/Dhaka';
+        $time = Carbon::parse($this->created_at)->timezone($timezone);
+    
         if ($time->isToday()) {
             return $time->format('h:i A') . ', Today';
         } elseif ($time->isYesterday()) {
@@ -33,6 +34,7 @@ class Message extends Model
             return $time->format('h:i A, M d, Y');
         }
     }
+    
 
 
 }

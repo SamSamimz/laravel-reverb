@@ -27,9 +27,17 @@ class User extends Authenticatable
     ];
 
     public function activeStatus() {
-        $date = Carbon::createFromFormat('Y-m-d H:i:s', $this->last_active_at, 'Asia/Dhaka');
+        $timezone = 'Asia/Dhaka';
+        $date = Carbon::createFromFormat('Y-m-d H:i:s', $this->last_active_at, $timezone);
+        $now = Carbon::now($timezone);
+    
+        if ($date->greaterThanOrEqualTo($now->subMinutes(5))) {
+            return 'Active now';
+        }
+    
         return $date->diffForHumans();
     }
+    
 
 
     /**

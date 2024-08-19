@@ -16,7 +16,8 @@ class ChatComponent extends Component
     // #[Url('username')]
     public $receiver_id;
     public $messages = [];
-
+    public $message = '';
+ 
     public function mount($username = null) {
         if($username) {
             $user = User::where('username',$username)->where('id', '!=', Auth::id())->first();
@@ -40,6 +41,7 @@ class ChatComponent extends Component
 
     public function changeSelectedUser(User $user) {
         $this->selectedUser = $user;
+        return $this->redirect(route('chat.index',$user->username),true);
     }
 
     public function loadMessages() {
@@ -52,7 +54,23 @@ class ChatComponent extends Component
         })->get();
         
         $this->messages = $messages;
+        // dd($messages);
     }
+
+    public function sendMessage() {
+        if(!$this->selectedUser) {
+            return;
+        }
+
+       $sendedMessage =  Message::create([
+            'sender_id' => Auth::id(),
+            'receiver_id' => $this->selectedUser->id,
+            'text' => $this->message
+       ]);
+       $this->loadMessages();
+       $this->reset('message');
+    }
+
 
     public function render()
     {
